@@ -1,0 +1,25 @@
+{
+    "name": "vue3-electron-ts",
+    "private": true,
+    "version": "0.0.0",
+    "main": "src-electron/main.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc && vite build",
+        "preview": "vite preview",
+        "electron": "wait-on tcp:5173 && electron .",
+        "electron-dev": "concurrently -k \"yarn dev\" \"yarn electron\""
+    },
+    "dependencies": {
+        "vue": "^3.4.21"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.0.4",
+        "concurrently": "^8.2.2",
+        "electron": "^29.2.0",
+        "typescript": "^5.2.2",
+        "vite": "^5.2.0",
+        "vue-tsc": "^2.0.6",
+        "wait-on": "^7.2.0"
+    }
+}
