@@ -4,14 +4,16 @@
     "version": "0.0.0",
     "author": "icuxika",
     "description": "Vue3 + Electron + TypeScript",
-    "main": "src-electron/main.js",
+    "type": "module",
+    "main": "dist-electron/main.js",
     "scripts": {
         "dev": "vite",
         "build": "vue-tsc && vite build",
         "preview": "vite preview",
+        "build:electron": "tsc --project tsconfig.electron.json && renamer --find \"/js/g\" --replace \"mjs\" ./dist-electron/preload.js",
         "electron": "wait-on tcp:5173 && electron .",
-        "electron-dev": "concurrently -k \"yarn dev\" \"yarn electron\"",
-        "electron-build": "yarn build && electron-builder"
+        "electron:dev": "concurrently -k \"yarn dev\" \"yarn electron\"",
+        "electron:build": "yarn build && electron-builder"
     },
     "dependencies": {
         "vue": "^3.4.21"
@@ -21,6 +23,7 @@
         "concurrently": "^8.2.2",
         "electron": "^29.2.0",
         "electron-builder": "^24.13.3",
+        "renamer": "^5.0.0",
         "typescript": "^5.2.2",
         "vite": "^5.2.0",
         "vue-tsc": "^2.0.6",
@@ -39,7 +42,7 @@
         },
         "files": [
             "dist/**/*",
-            "src-electron/**/*"
+            "dist-electron/**/*"
         ],
         "directories": {
             "buildResources": "build",

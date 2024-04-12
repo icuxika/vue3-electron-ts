@@ -1,6 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("node:path");
+import { app, BrowserWindow, ipcMain } from "electron";
+import path from "path";
+import { fileURLToPath } from "url";
 const isPackaged = app.isPackaged;
+
+const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
+console.log(__dirname);
 
 const createWindow = () => {
     // Create the browser window.
@@ -8,14 +12,17 @@ const createWindow = () => {
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(__dirname, "./preload.mjs"),
+            sandbox: false,
+            nodeIntegration: false,
+            contextIsolation: true,
         },
     });
 
     ipcMain.on("set-title", (event, title) => {
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
-        win.setTitle(title);
+        win?.setTitle(title);
     });
 
     // 加载 index.html
@@ -26,7 +33,7 @@ const createWindow = () => {
     }
 
     // 打开开发工具
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 };
 
 // 这段程序将会在 Electron 结束初始化
