@@ -1,6 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, Menu, Tray, app, dialog, ipcMain } from "electron";
 import path from "path";
-import { uIOhook, UiohookKey } from "uiohook-napi";
+import { UiohookKey, uIOhook } from "uiohook-napi";
 import { fileURLToPath } from "url";
 
 const isPackaged = app.isPackaged;
@@ -36,6 +36,48 @@ const createWindow = () => {
         const win = BrowserWindow.fromWebContents(webContents);
         win?.setTitle(title);
     });
+
+    ipcMain.handle("dialog:openFile", async () => {
+        const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow);
+        if (!canceled) {
+            return filePaths[0];
+        }
+    });
+
+    ipcMain.on("counter-value", (_event, value) => {
+        console.log(value);
+    });
+
+    // 菜单
+    const menu = Menu.buildFromTemplate([
+        {
+            label: app.name,
+            submenu: [
+                {
+                    click: () =>
+                        mainWindow.webContents.send("update-counter", 1),
+                    label: "增加",
+                },
+                {
+                    click: () =>
+                        mainWindow.webContents.send("update-counter", -1),
+                    label: "减少",
+                },
+            ],
+        },
+    ]);
+    Menu.setApplicationMenu(menu);
+
+    // 托盘图标
+    const appIcon = new Tray(
+        path.join(__dirname, "../src-electron/assets/application.ico")
+    );
+    const contextMenu = Menu.buildFromTemplate([
+        { label: "Item1", type: "radio" },
+        { label: "Item2", type: "radio" },
+    ]);
+    contextMenu.items[1].checked = false;
+    appIcon.setContextMenu(contextMenu);
 
     // 加载 index.html
     if (isPackaged) {

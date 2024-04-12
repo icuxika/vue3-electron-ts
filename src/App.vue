@@ -2,12 +2,19 @@
 import { ref } from "vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import { useNative } from "./native/use-native";
-const { setTitle } = useNative();
+const { setTitle, openFile, onUpdateCounter, counterValue } = useNative();
 
 const title = ref<string>("");
 const updateTitle = () => {
     setTitle(title.value);
 };
+const getFilePath = async () => {
+    console.log(await openFile());
+};
+onUpdateCounter((value: number) => {
+    console.log(value);
+    counterValue(value);
+});
 </script>
 
 <template>
@@ -22,6 +29,9 @@ const updateTitle = () => {
     <HelloWorld msg="Vite + Vue" />
     <input type="text" v-model="title" />
     <button type="button" @click="updateTitle">IPC更新标题</button>
+    <div>
+        <button type="button" @click="getFilePath">打开文件</button>
+    </div>
 </template>
 
 <style scoped>
