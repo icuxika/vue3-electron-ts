@@ -1,10 +1,22 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
+import { uIOhook, UiohookKey } from "uiohook-napi";
 import { fileURLToPath } from "url";
-const isPackaged = app.isPackaged;
 
+const isPackaged = app.isPackaged;
 const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
-console.log(__dirname);
+
+uIOhook.on("keydown", (e) => {
+    if (e.keycode === UiohookKey.Q) {
+        console.log("Hello!");
+    }
+
+    if (e.keycode === UiohookKey.Escape) {
+        process.exit(0);
+    }
+});
+
+uIOhook.start();
 
 const createWindow = () => {
     // Create the browser window.

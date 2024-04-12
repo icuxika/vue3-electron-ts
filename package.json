@@ -16,6 +16,7 @@
         "electron:build": "yarn build && electron-builder"
     },
     "dependencies": {
+        "uiohook-napi": "^1.5.4",
         "vue": "^3.4.21"
     },
     "devDependencies": {
